@@ -233,3 +233,21 @@ In REST:
 Event soursing:
 How does we persist data in trandtional app? We first create a new prodcut and then we over and over again update it. How does this goes in event soursing? All changes are stored
 
+```bash
+docker run -d --name axonserver -p 8024:8024 -p 8124:8124 -v //D/Projects/microservice/docker/data:/axonserver/data -v //D/Projects/microservice/docker/eventdata:/axonserver/eventdata -v //D/Projects/microservice/docker/config:/axonserver/config axoniq/axonserver:4.4.9
+```
+
+```bash
+cd axon-server
+
+mkdir config
+touch axonserver.properties
+
+vi axonserver.properties
+    server.port=8024
+    axoniq.axonserver.name=My Axon Server
+    axoniq.axonserver.hostname=localhost
+    axoniq.axonserver.devmode.enabled=true
+
+java -jar axonserver.jar
+```
