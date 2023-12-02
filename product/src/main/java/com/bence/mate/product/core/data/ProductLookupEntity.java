@@ -1,4 +1,4 @@
-package com.bence.mate.product.example.model;
+package com.bence.mate.product.core.data;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

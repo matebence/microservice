@@ -1,4 +1,4 @@
-package com.bence.mate.product.example.command;
+package com.bence.mate.product.command;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import lombok.RequiredArgsConstructor;

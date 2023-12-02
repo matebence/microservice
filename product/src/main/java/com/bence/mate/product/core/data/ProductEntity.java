@@ -1,4 +1,4 @@
-package com.bence.mate.product.example.entity;
+package com.bence.mate.product.core.data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

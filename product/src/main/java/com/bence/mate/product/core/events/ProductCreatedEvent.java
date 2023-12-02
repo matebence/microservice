@@ -1,4 +1,4 @@
-package com.bence.mate.product.example.event;
+package com.bence.mate.product.core.events;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

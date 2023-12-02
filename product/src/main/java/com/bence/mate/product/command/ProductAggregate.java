@@ -1,4 +1,4 @@
-package com.bence.mate.product.example.aggregate;
+package com.bence.mate.product.command;
 
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -6,8 +6,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import lombok.NoArgsConstructor;
 
-import com.bence.mate.product.example.command.CreateProductCommand;
-import com.bence.mate.product.example.event.ProductCreatedEvent;
+import com.bence.mate.product.core.events.ProductCreatedEvent;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.springframework.beans.BeanUtils;
 

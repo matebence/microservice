@@ -1,6 +1,6 @@
-package com.bence.mate.product.example.repository;
+package com.bence.mate.product.core.repository;
 
-import com.bence.mate.product.example.model.ProductLookupEntity;
+import com.bence.mate.product.core.data.ProductLookupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

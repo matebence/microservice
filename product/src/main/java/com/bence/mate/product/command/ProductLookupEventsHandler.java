@@ -1,8 +1,8 @@
-package com.bence.mate.product.example.handler;
+package com.bence.mate.product.command;
 
-import com.bence.mate.product.example.repository.ProductLookupRepository;
-import com.bence.mate.product.example.event.ProductCreatedEvent;
-import com.bence.mate.product.example.model.ProductLookupEntity;
+import com.bence.mate.product.core.repository.ProductLookupRepository;
+import com.bence.mate.product.core.events.ProductCreatedEvent;
+import com.bence.mate.product.core.data.ProductLookupEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.axonframework.eventhandling.EventHandler;

@@ -1,6 +1,6 @@
 package com.bence.mate.product;
 
-import com.bence.mate.product.example.interceptor.CreateProductCommandInterceptor;
+import com.bence.mate.product.command.interceptor.CreateProductCommandInterceptor;
 import org.springframework.context.ApplicationContext;
 import org.axonframework.commandhandling.CommandBus;
 import org.springframework.boot.SpringApplication;

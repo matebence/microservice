@@ -1,8 +1,8 @@
-package com.bence.mate.product.example.handler;
+package com.bence.mate.product.query;
 
-import com.bence.mate.product.example.repository.ProductsRepository;
-import com.bence.mate.product.example.event.ProductCreatedEvent;
-import com.bence.mate.product.example.entity.ProductEntity;
+import com.bence.mate.product.core.repository.ProductsRepository;
+import com.bence.mate.product.core.events.ProductCreatedEvent;
+import com.bence.mate.product.core.data.ProductEntity;
 import org.springframework.beans.BeanUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
-package com.bence.mate.product.example.interceptor;
+package com.bence.mate.product.command.interceptor;
 
-import com.bence.mate.product.example.repository.ProductLookupRepository;
-import com.bence.mate.product.example.command.CreateProductCommand;
-import com.bence.mate.product.example.model.ProductLookupEntity;
+import com.bence.mate.product.core.repository.ProductLookupRepository;
+import com.bence.mate.product.command.CreateProductCommand;
+import com.bence.mate.product.core.data.ProductLookupEntity;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.commandhandling.CommandMessage;
 
