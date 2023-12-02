@@ -30,6 +30,7 @@ public class ProductAggregate {
     @CommandHandler
     public ProductAggregate(CreateProductCommand createProductCommand) {
         //validate createProduct Command
+        // Validation in the @CommandHandler method
         if(createProductCommand.getPrice().compareTo(BigDecimal.ZERO)<=0) {
             throw new IllegalArgumentException("Price cannot be less or equal to zero.");
         }

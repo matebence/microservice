@@ -3,9 +3,14 @@ package com.bence.mate.product.example.resource;
 import com.bence.mate.product.example.command.CreateProductCommand;
 import com.bence.mate.product.example.model.CreateProductRestModel;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
+import com.bence.mate.product.example.model.FindProductsQuery;
+import com.bence.mate.product.example.model.ProductRestModel;
+import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.core.env.Environment;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,17 +21,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/products")
 public class ProductResource {
 
     @Autowired
-    private Environment env;
+    private CommandGateway commandGateway;
 
     @Autowired
-    private CommandGateway commandGateway;
+    private QueryGateway queryGateway;
+
+    @Autowired
+    private Environment env;
 
     @PostMapping
     public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
@@ -49,12 +59,16 @@ public class ProductResource {
     }
 
     @GetMapping
-    public String getProduct() {
+    public List<ProductRestModel> getProducts() {
         // Api cloud gate way uses the ribbon load balancer
         // with the random port we can simulate it
         // mvn clean install
         // java -jar .\product-0.0.1-SNAPSHOT.jar
-        return "HTTP GET handled " + env.getProperty("local.server.port");
+        log.info("HTTP GET handled {}", env.getProperty("local.server.port"));
+
+        FindProductsQuery findProductsQuery = new FindProductsQuery();
+
+        return queryGateway.query(findProductsQuery, ResponseTypes.multipleInstancesOf(ProductRestModel.class)).join();
     }
 
     @PutMapping
