@@ -36,6 +36,8 @@ public class ProductsCommandController {
             // this will block the main thread
             productId = commandGateway.sendAndWait(createProductCommand);
         } catch (Exception ex) {
+            // Its is possible to handle errors like this, but its recommend to have a central place
+            // Via Spring @ControllerAdvice = this try catch has to be commented out
             productId = ex.getMessage();
         }
         return productId;

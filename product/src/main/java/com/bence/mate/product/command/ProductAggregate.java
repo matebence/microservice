@@ -27,7 +27,7 @@ public class ProductAggregate {
     private Integer quantity;
 
     @CommandHandler
-    public ProductAggregate(CreateProductCommand createProductCommand) {
+    public ProductAggregate(CreateProductCommand createProductCommand) throws Exception {
         //validate createProduct Command
         // Validation in the @CommandHandler method
         if(createProductCommand.getPrice().compareTo(BigDecimal.ZERO)<=0) {
@@ -49,6 +49,11 @@ public class ProductAggregate {
 		so that its state could be updated.
 		*/
         AggregateLifecycle.apply(productCreatedEvent);
+
+        // We put it after apply, but axon doest persist the data immediately, so it will fail
+        if (true) {
+            throw new Exception("Error happened");
+        }
     }
 
     //Initialize the current state of the aggregate based on the latest information
