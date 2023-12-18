@@ -2,7 +2,7 @@ package com.bence.mate.order.command.rest;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import com.bence.mate.order.command.CreateOrderCommand;
-import com.bence.mate.order.core.model.OrderStatus;
+import com.bence.mate.core.model.OrderStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

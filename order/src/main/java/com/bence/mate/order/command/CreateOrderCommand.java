@@ -2,7 +2,7 @@ package com.bence.mate.order.command;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-import com.bence.mate.order.core.model.OrderStatus;
+import com.bence.mate.core.model.OrderStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Builder;

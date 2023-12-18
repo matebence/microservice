@@ -1,8 +1,9 @@
 package com.bence.mate.order.command;
 
-import com.bence.mate.order.core.model.events.OrderCreatedEvent;
 import org.axonframework.modelling.command.AggregateLifecycle;
-import com.bence.mate.order.core.model.OrderStatus;
+import com.bence.mate.order.core.events.OrderCreatedEvent;
+import com.bence.mate.core.events.OrderApprovedEvent;
+import com.bence.mate.core.model.OrderStatus;
 import org.springframework.beans.BeanUtils;
 
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -37,12 +38,25 @@ public class OrderAggregate {
     }
 
     @EventSourcingHandler
-    public void on(OrderCreatedEvent orderCreatedEvent) throws Exception {
+    public void on(OrderCreatedEvent orderCreatedEvent) {
         this.orderId = orderCreatedEvent.getOrderId();
         this.productId = orderCreatedEvent.getProductId();
         this.userId = orderCreatedEvent.getUserId();
         this.addressId = orderCreatedEvent.getAddressId();
         this.quantity = orderCreatedEvent.getQuantity();
         this.orderStatus = orderCreatedEvent.getOrderStatus();
+    }
+
+    @CommandHandler
+    public void handle(ApproveOrderCommand approveOrderCommand) {
+        //Create and publish the OrderApprovedEvent
+        OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(approveOrderCommand.getOrderId());
+
+        AggregateLifecycle.apply(orderApprovedEvent);
+    }
+
+    @EventSourcingHandler
+    protected void on(OrderApprovedEvent orderApprovedEvent) {
+        this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
 }

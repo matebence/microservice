@@ -1,31 +1,21 @@
-package com.bence.mate.order.core.data;
+package com.bence.mate.order.core.events;
 
 import com.bence.mate.core.model.OrderStatus;
-import javax.persistence.EnumType;
-import java.io.Serializable;
-
-import javax.persistence.Enumerated;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
 import lombok.Setter;
+import lombok.Getter;
 
-@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="orders")
-public class OrderEntity implements Serializable {
+public class OrderCreatedEvent {
 
-    @Id
     @Getter
     @Setter
-    @Column(unique = true)
-    public String orderId;
+    private String orderId;
 
     @Getter
     @Setter
@@ -45,6 +35,5 @@ public class OrderEntity implements Serializable {
 
     @Getter
     @Setter
-    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 }

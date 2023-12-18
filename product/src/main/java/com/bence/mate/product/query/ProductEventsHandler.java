@@ -2,6 +2,7 @@ package com.bence.mate.product.query;
 
 import com.bence.mate.product.core.repository.ProductsRepository;
 import com.bence.mate.product.core.events.ProductCreatedEvent;
+import com.bence.mate.core.events.ProductReservedEvent;
 import com.bence.mate.product.core.data.ProductEntity;
 import org.springframework.beans.BeanUtils;
 
@@ -35,6 +36,19 @@ public class ProductEventsHandler {
     }
 
     @EventHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        ProductEntity productEntity = productsRepository.findByProductId(productReservedEvent.getProductId());
+
+        log.debug("ProductReservedEvent: Current product quantity: " + productEntity.getQuantity());
+
+        productEntity.setQuantity(productEntity.getQuantity()-productReservedEvent.getQuantity());
+        productsRepository.save(productEntity);
+
+        log.debug("ProductReservedEvent: New product quantity: " + productEntity.getQuantity());
+        log.info("productReservedEvent is called for productId: " + productReservedEvent.getProductId() + " and orderId: " + productReservedEvent.getOrderId());
+    }
+
+    @EventHandler
     public void on(ProductCreatedEvent event) throws Exception {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(event, productEntity);
@@ -47,8 +61,8 @@ public class ProductEventsHandler {
             e.printStackTrace();
         }
 
-        if (true) {
-            throw new Exception("Error happened");
-        }
+        // if (true) {
+        //    throw new Exception("Error happened");
+        // }
     }
 }

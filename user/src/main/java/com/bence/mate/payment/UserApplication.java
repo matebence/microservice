@@ -1,12 +1,12 @@
-package com.bence.mate.core;
+package com.bence.mate.payment;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
 
 @SpringBootApplication
-public class CoreApplication {
+public class UserApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CoreApplication.class, args);
+		SpringApplication.run(UserApplication.class, args);
 	}
 }

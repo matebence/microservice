@@ -1,7 +1,8 @@
 package com.bence.mate.order.query;
 
-import com.bence.mate.order.core.model.events.OrderCreatedEvent;
+import com.bence.mate.order.core.events.OrderCreatedEvent;
 import com.bence.mate.order.core.data.OrdersRepository;
+import com.bence.mate.core.events.OrderApprovedEvent;
 import com.bence.mate.order.core.data.OrderEntity;
 import org.springframework.beans.BeanUtils;
 
@@ -23,5 +24,17 @@ public class OrderEventsHandler {
         BeanUtils.copyProperties(event, orderEntity);
 
         this.ordersRepository.save(orderEntity);
+    }
+
+    @EventHandler
+    public void on(OrderApprovedEvent orderApprovedEvent) {
+        OrderEntity orderEntity = ordersRepository.findByOrderId(orderApprovedEvent.getOrderId());
+        if(orderEntity == null) {
+            return;
+        }
+
+        orderEntity.setOrderStatus(orderApprovedEvent.getOrderStatus());
+
+        ordersRepository.save(orderEntity);
     }
 }

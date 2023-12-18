@@ -1,7 +1,7 @@
-package com.bence.mate.core;
+package com.bence.mate.payment;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CoreApplicationTests {
+class UserApplicationTests {
 }

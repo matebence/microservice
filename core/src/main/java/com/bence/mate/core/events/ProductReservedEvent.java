@@ -1,6 +1,4 @@
-package com.bence.mate.order.core.model.events;
-
-import com.bence.mate.order.core.model.OrderStatus;
+package com.bence.mate.core.events;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,11 +9,7 @@ import lombok.Getter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCreatedEvent {
-
-    @Getter
-    @Setter
-    private String orderId;
+public class ProductReservedEvent {
 
     @Getter
     @Setter
@@ -23,17 +17,13 @@ public class OrderCreatedEvent {
 
     @Getter
     @Setter
-    private String userId;
-
-    @Getter
-    @Setter
     private int quantity;
 
     @Getter
     @Setter
-    private String addressId;
+    private String orderId;
 
     @Getter
     @Setter
-    private OrderStatus orderStatus;
+    private String userId;
 }

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import com.bence.mate.product.core.events.ProductCreatedEvent;
 import org.axonframework.modelling.command.AggregateLifecycle;
+import com.bence.mate.core.commands.ReserveProductCommand;
+import com.bence.mate.core.events.ProductReservedEvent;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
@@ -51,9 +53,30 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productCreatedEvent);
 
         // We put it after apply, but axon doest persist the data immediately, so it will fail
-        if (true) {
-            throw new Exception("Error happened");
+        // if (true) {
+        //    throw new Exception("Error happened");
+        // }
+    }
+
+    @CommandHandler
+    public void handle(ReserveProductCommand reserveProductCommand) {
+        if(quantity < reserveProductCommand.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient number of items in stock");
         }
+
+        ProductReservedEvent productReservedEvent = ProductReservedEvent.builder()
+                .orderId(reserveProductCommand.getOrderId())
+                .productId(reserveProductCommand.getProductId())
+                .quantity(reserveProductCommand.getQuantity())
+                .userId(reserveProductCommand.getUserId())
+                .build();
+
+        AggregateLifecycle.apply(productReservedEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        this.quantity -= productReservedEvent.getQuantity();
     }
 
     //Initialize the current state of the aggregate based on the latest information
