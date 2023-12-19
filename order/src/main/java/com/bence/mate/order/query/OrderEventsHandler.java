@@ -1,5 +1,6 @@
 package com.bence.mate.order.query;
 
+import com.bence.mate.order.core.events.OrderRejectedEvent;
 import com.bence.mate.order.core.events.OrderCreatedEvent;
 import com.bence.mate.order.core.data.OrdersRepository;
 import com.bence.mate.core.events.OrderApprovedEvent;
@@ -34,6 +35,14 @@ public class OrderEventsHandler {
         }
 
         orderEntity.setOrderStatus(orderApprovedEvent.getOrderStatus());
+
+        ordersRepository.save(orderEntity);
+    }
+
+    @EventHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        OrderEntity orderEntity = ordersRepository.findByOrderId(orderRejectedEvent.getOrderId());
+        orderEntity.setOrderStatus(orderRejectedEvent.getOrderStatus());
 
         ordersRepository.save(orderEntity);
     }

@@ -1,6 +1,7 @@
 package com.bence.mate.order.command;
 
 import org.axonframework.modelling.command.AggregateLifecycle;
+import com.bence.mate.order.core.events.OrderRejectedEvent;
 import com.bence.mate.order.core.events.OrderCreatedEvent;
 import com.bence.mate.core.events.OrderApprovedEvent;
 import com.bence.mate.core.model.OrderStatus;
@@ -58,5 +59,18 @@ public class OrderAggregate {
     @EventSourcingHandler
     protected void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
+    }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand) {
+        //Create and publish the OrderRejectedEvent
+        OrderRejectedEvent orderRejectedEvent = new OrderRejectedEvent(rejectOrderCommand.getOrderId(), rejectOrderCommand.getReason());
+
+        AggregateLifecycle.apply(orderRejectedEvent);
+    }
+
+    @EventSourcingHandler
+    protected void on(OrderRejectedEvent orderRejectedEvent) {
+        this.orderStatus = orderRejectedEvent.getOrderStatus();
     }
 }

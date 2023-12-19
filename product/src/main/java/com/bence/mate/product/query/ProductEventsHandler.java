@@ -1,5 +1,6 @@
 package com.bence.mate.product.query;
 
+import com.bence.mate.core.events.ProductReservationCancelledEvent;
 import com.bence.mate.product.core.repository.ProductsRepository;
 import com.bence.mate.product.core.events.ProductCreatedEvent;
 import com.bence.mate.core.events.ProductReservedEvent;
@@ -64,5 +65,19 @@ public class ProductEventsHandler {
         // if (true) {
         //    throw new Exception("Error happened");
         // }
+    }
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        ProductEntity currentlyStoredProduct = productsRepository.findByProductId(productReservationCancelledEvent.getProductId());
+
+        log.debug("ProductReservationCancelledEvent: Current product quantity: " + currentlyStoredProduct.getQuantity());
+
+        int newQuantity = productReservationCancelledEvent.getQuantity() + currentlyStoredProduct.getQuantity();
+        currentlyStoredProduct.setQuantity(newQuantity);
+
+        productsRepository.save(currentlyStoredProduct);
+
+        log.debug("ProductReservationCancelledEvent: New product quantity: " + currentlyStoredProduct.getQuantity());
     }
 }

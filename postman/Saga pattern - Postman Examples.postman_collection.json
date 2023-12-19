@@ -1,0 +1,65 @@
+{
+	"info": {
+		"_postman_id": "32263472-e2ed-46fb-884c-80d553d31108",
+		"name": "Saga pattern - Postman Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:8082/orders-service/orders",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productId\": \"52560f4e-7700-49a9-925e-4e203de62c4c\",\r\n    \"quantity\": 1,\r\n    \"addressId\": \"aaa248-2378s1-23fjkd-213jfd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/orders-service/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders-service",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/products-service/products",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"iPad Pro\",\r\n    \"price\": 900,\r\n    \"quantity\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/products-service/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"products-service",
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
