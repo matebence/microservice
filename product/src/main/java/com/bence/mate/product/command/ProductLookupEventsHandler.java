@@ -5,6 +5,7 @@ import com.bence.mate.product.core.events.ProductCreatedEvent;
 import com.bence.mate.product.core.data.ProductLookupEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.axonframework.eventhandling.ResetHandler;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.config.ProcessingGroup;
 import org.springframework.stereotype.Component;
@@ -21,5 +22,10 @@ public class ProductLookupEventsHandler {
         ProductLookupEntity productLookupEntity = new ProductLookupEntity(event.getProductId(), event.getTitle());
 
         productLookupRepository.save(productLookupEntity);
+    }
+
+    @ResetHandler
+    public void reset() {
+        productLookupRepository.deleteAll();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 
 import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.axonframework.eventhandling.ResetHandler;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 import org.axonframework.config.ProcessingGroup;
@@ -79,5 +80,10 @@ public class ProductEventsHandler {
         productsRepository.save(currentlyStoredProduct);
 
         log.debug("ProductReservationCancelledEvent: New product quantity: " + currentlyStoredProduct.getQuantity());
+    }
+
+    @ResetHandler
+    public void reset() {
+        productsRepository.deleteAll();
     }
 }
