@@ -40,6 +40,7 @@ public class ProductApplication {
 	}
 
 	// Configuring snapshoting
+	// These snapshots can be seen the axon dashboard
 	@Bean(name = "productSnapshotTriggerDefinition")
 	public SnapshotTriggerDefinition productSnapshotTriggerDefinition(Snapshotter snapshotter) {
 		return new EventCountSnapshotTriggerDefinition(snapshotter, 3); // tree events is the current threshold
