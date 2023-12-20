@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "32263472-e2ed-46fb-884c-80d553d31108",
+		"_postman_id": "07d713db-c5ab-4aa4-8633-62641a2c40f2",
 		"name": "Saga pattern - Postman Examples",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -56,6 +56,28 @@
 					"path": [
 						"products-service",
 						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/products-service/management/eventProcessor/product-group/reset",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8082/products-service/management/eventProcessor/product-group/reset",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"products-service",
+						"management",
+						"eventProcessor",
+						"product-group",
+						"reset"
 					]
 				}
 			},

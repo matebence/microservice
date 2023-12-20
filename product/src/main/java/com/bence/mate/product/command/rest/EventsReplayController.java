@@ -24,6 +24,7 @@ public class EventsReplayController {
     public ResponseEntity<String> replayEvents(@PathVariable String processorName) {
         Optional<TrackingEventProcessor>trackingEventProcessor = eventProcessingConfiguration.eventProcessor(processorName, TrackingEventProcessor.class);
 
+        // It will first delete everything from the read database then insert everything with help of the event store
         if(trackingEventProcessor.isPresent()) {
             TrackingEventProcessor eventProcessor = trackingEventProcessor.get();
             eventProcessor.shutDown();
