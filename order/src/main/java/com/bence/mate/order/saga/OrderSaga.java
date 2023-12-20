@@ -1,6 +1,7 @@
 package com.bence.mate.order.saga;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.axonframework.deadline.annotation.DeadlineHandler;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
@@ -19,6 +20,7 @@ import com.bence.mate.core.commands.CancelProductReservationCommand;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import com.bence.mate.order.command.ApproveOrderCommand;
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.deadline.DeadlineManager;
 import com.bence.mate.core.model.User;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -26,6 +28,8 @@ import com.bence.mate.order.core.events.OrderCreatedEvent;
 import com.bence.mate.core.commands.ReserveProductCommand;
 import com.bence.mate.core.commands.ProcessPaymentCommand;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.UUID;
 
@@ -33,12 +37,20 @@ import java.util.UUID;
 @Slf4j
 public class OrderSaga {
 
+    private final String PAYMENT_PROCESSING_TIMEOUT_DEADLINE = "payment-processing-deadline";
+
+    private String scheduleId;
+
     @Autowired
     private transient QueryGateway queryGateway;
 
     @Autowired
+    private transient DeadlineManager deadlineManager;
+
+    @Autowired
     //we use transient because we don't want to serialize CommandGateway
     private transient CommandGateway commandGateway;
+
 
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
@@ -84,6 +96,10 @@ public class OrderSaga {
         }
         log.info("{}", userPaymentDetails);
 
+        // Deadline
+        scheduleId = deadlineManager.schedule(Duration.of(120, ChronoUnit.SECONDS),
+                PAYMENT_PROCESSING_TIMEOUT_DEADLINE, productReservedEvent);
+
         // --------------------- Process payment details ---------------------
         ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand.builder()
                 .orderId(productReservedEvent.getOrderId())
@@ -110,6 +126,9 @@ public class OrderSaga {
 
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+        // In case of success cancel deadline:
+        cancelDeadline();
+
         // Send an ApproveOrderCommand
         ApproveOrderCommand approvedOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
 
@@ -126,7 +145,10 @@ public class OrderSaga {
         //	SagaLifecycle.end();
     }
 
+    // We can trigger this with the deadline or we just turn off the user service
     private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
+        cancelDeadline();
+
         CancelProductReservationCommand publishProductReservationCommand =
                 CancelProductReservationCommand.builder()
                         .orderId(productReservedEvent.getOrderId())
@@ -152,5 +174,18 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderRejectedEvent orderRejectedEvent) {
         log.info("Successfully rejected order with id: " + orderRejectedEvent.getOrderId());
+    }
+
+    private void cancelDeadline() {
+        if(scheduleId != null) {
+            deadlineManager.cancelSchedule(PAYMENT_PROCESSING_TIMEOUT_DEADLINE, scheduleId);
+            scheduleId = null;
+        }
+    }
+
+    @DeadlineHandler(deadlineName = PAYMENT_PROCESSING_TIMEOUT_DEADLINE)
+    public void handlePaymentDeadline(ProductReservedEvent productReservedEvent) {
+        log.info("Payment processing deadline took place. " + "Sending a compensating command to cancel the product reservation.");
+        cancelProductReservation(productReservedEvent, "Payment timout");
     }
 }
