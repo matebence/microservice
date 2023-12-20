@@ -15,9 +15,12 @@ import com.bence.mate.core.events.PaymentProcessedEvent;
 import com.bence.mate.core.events.ProductReservedEvent;
 import com.bence.mate.order.command.RejectOrderCommand;
 import com.bence.mate.core.events.OrderApprovedEvent;
+import com.bence.mate.order.core.model.OrderSummary;
+import com.bence.mate.order.query.FindOrderQuery;
 
 import com.bence.mate.core.commands.CancelProductReservationCommand;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.queryhandling.QueryUpdateEmitter;
 import com.bence.mate.order.command.ApproveOrderCommand;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.deadline.DeadlineManager;
@@ -51,6 +54,9 @@ public class OrderSaga {
     //we use transient because we don't want to serialize CommandGateway
     private transient CommandGateway commandGateway;
 
+    @Autowired
+    // With this we can update the result
+    private transient QueryUpdateEmitter queryUpdateEmitter;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "orderId")
@@ -141,6 +147,7 @@ public class OrderSaga {
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         log.info("Order is approved. Order Saga is complete for orderId: " + orderApprovedEvent.getOrderId() );
 
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true, new OrderSummary(orderApprovedEvent.getOrderId(), orderApprovedEvent.getOrderStatus(), ""));
         // This can be also used instead of @EndSaga:
         //	SagaLifecycle.end();
     }
@@ -174,6 +181,11 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderRejectedEvent orderRejectedEvent) {
         log.info("Successfully rejected order with id: " + orderRejectedEvent.getOrderId());
+
+        queryUpdateEmitter.emit(FindOrderQuery.class, query -> true,
+                new OrderSummary(orderRejectedEvent.getOrderId(),
+                        orderRejectedEvent.getOrderStatus(),
+                        orderRejectedEvent.getReason()));
     }
 
     private void cancelDeadline() {
