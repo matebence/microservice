@@ -73,6 +73,9 @@ public class OrderSaga {
         commandGateway.send(reserveProductCommand, (commandMessage, commandResultMessage) -> {
             // There is a exception
             if (commandResultMessage.isExceptional()) {
+                // Start a compensating transaction
+                RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(orderCreatedEvent.getOrderId(), commandResultMessage.exceptionResult().getMessage() );
+                commandGateway.send(rejectOrderCommand);
             }
         });
     }
